@@ -12,19 +12,31 @@ import {
 // eslint-disable-next-line react/prefer-stateless-function
 class LoginRegisterPage extends Component {
 
+  state = {
+    input : {},
+    isValidate: {
+      
+    }
+  }
+
+  validationCondition = {
+    email: /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/,
+    password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,10}$/
+  }
+
   selectField = () =>{
     const {match} = this.props
     if(match.path === '/login'){
       return [
         {
           name : 'email',
-          icon: 'user',
+          icon: 'mail',
           iconPosition: 'left',
           placeholder: 'Email Address',
         },
         {
           name : 'password',
-          icon: 'user',
+          icon: 'lock',
           iconPosition: 'left',
           placeholder: 'Input Password',
           type: 'password'
@@ -40,19 +52,36 @@ class LoginRegisterPage extends Component {
         },
         {
           name : 'email',
-          icon : 'user',
+          icon : 'mail',
           iconPosition : 'left',
           placeholder : 'Email Address'
         },
         {
           name : 'password',
-          icon: 'user',
+          icon: 'lock',
           iconPosition: 'left',
           placeholder: 'Input Password',
           type: 'password'
         }
       ]
     }
+  }
+
+  _onFieldChange = (_, data) => {
+    const {input, isValidate} = this.state
+    const newInput = { ...input }
+    const newIsValidate= {...isValidate}
+    newInput[data.name] = data.value
+    newIsValidate[data.name] = this.validationCondition[data.name].test(data.value)
+    this.setState({ input: newInput, isValidate: newIsValidate },
+      (state) => {
+      console.log(this.state.isValidate);
+    })
+  }
+
+  _onSubmit = () => {
+    const {input, isValidate} = this.state
+    const newInput = { ...input }
   }
 
   render() {
@@ -69,6 +98,7 @@ class LoginRegisterPage extends Component {
                   <Form.Input
                     fluid
                     {...field}
+                    onChange={this._onFieldChange}
                   />
                 )
               })}
