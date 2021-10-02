@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Header } from 'semantic-ui-react';
+import {Grid, Header} from 'semantic-ui-react';
 
 const MainPage = () => (
   <Grid
@@ -9,7 +9,7 @@ const MainPage = () => (
     textAlign="center"
     verticalAlign="middle"
   >
-    <Grid.Column style={{ maxWidth: 450 }}>
+    <Grid.Column style={{maxWidth: 450}}>
       <Header as="h2" color="teal" textAlign="center">
         Main page
       </Header>

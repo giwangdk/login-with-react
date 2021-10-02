@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+
 import React from 'react';
 import {
   Switch,
@@ -12,6 +13,7 @@ const Pages = () => (
   <div id="indexPage">
     <Switch>
       <Route path="/login" component={LoginRegister} />
+      <Route path="/register" component={LoginRegister} />
       <Route exact path="/" component={Main} />
     </Switch>
   </div>
