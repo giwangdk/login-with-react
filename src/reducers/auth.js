@@ -5,15 +5,16 @@ const type = {
 
 const initialState = {
   token: localStorage.getItem('token'),
-  isAuth: localStorage.getItem('token') !== null
+  isAuth: !!localStorage.getItem('token')
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default (state = initialState, action) => {
   const newState = {...state};
   switch (action.type) {
     case type.LOGIN:
       if(action.payload === null){
-        return state
+        return initialState
       }
       localStorage.setItem('token', action.payload.token)
       return {

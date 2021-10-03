@@ -7,7 +7,8 @@ import {
   Header,
   Message,
   Segment,
-  Loader
+  Loader,
+  Icon
 } from 'semantic-ui-react';
 
 import authRedirect from './../hocs/authRedirect'
@@ -15,6 +16,7 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { LOGIN } from './../reducers/auth';
 import axios from 'axios'
+import GoogleAuthComp from '../components/googleAuth'
 // eslint-disable-next-line react/prefer-stateless-function
 
 const baseUrl = 'https://pomonatodo.herokuapp.com/auth'
@@ -40,6 +42,7 @@ class LoginRegisterPage extends Component {
 
   componentDidMount() {
     const { isAuth, history } = this.props
+    console.log(isAuth);
     if(isAuth){
       history.push('/')
     }
@@ -94,10 +97,7 @@ class LoginRegisterPage extends Component {
     const newIsValidate= {...isValidate}
     newInput[data.name] = data.value
     newIsValidate[data.name] = this.validationCondition[data.name].test(data.value)
-    this.setState({ input: newInput, isValidate: newIsValidate, error:null },
-      (state) => {
-      console.log(this.state.isValidate);
-    })
+    this.setState({ input: newInput, isValidate: newIsValidate, error:null })
   }
 
   _onFormSubmit = async (e) => {
@@ -128,6 +128,10 @@ class LoginRegisterPage extends Component {
       this.setState({ error: error.message, isLoading: false })
     }
 
+  }
+
+  _onGoogleSuccess = (data) => {
+    console.log(data);
   }
 
   render() {
@@ -161,7 +165,13 @@ class LoginRegisterPage extends Component {
               )}
             </Segment>
           </Form>
-         
+                <GoogleAuthComp appID= '166892355519-vld5jpe7dkdccmhi0ckuoh9q090jdr0v.apps.googleusercontent.com'
+            onSuccess={this._onGoogleSuccess}
+            component={
+            (_props) => (
+              <Button {..._props} icon fluid style={{margin:'12px 0px'}}><Icon  name='google' /> Sign In with Google</Button>
+            )
+          }/>
           <Message>
             New to us?
             <a href="#">Sign Up</a>
@@ -173,9 +183,7 @@ class LoginRegisterPage extends Component {
   }
 }
 
-const mapStateToProps = state =>({
-  isAuth : state.isAuth
-})
+
 
 const mapActionToProps = dispatch => bindActionCreators({
   LOGIN

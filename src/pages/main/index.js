@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Home from './Home';
-import unAuthredirect from '../../hocs/unAuthRedirect'
+import unAuthRedirect from '../../hocs/unAuthRedirect'
 
 const MainPages = () => (
     <Switch>
@@ -9,4 +9,4 @@ const MainPages = () => (
     </Switch>
 )
 
-export default unAuthredirect('/login', MainPages)
+export default unAuthRedirect('/login', MainPages)
