@@ -37,6 +37,13 @@ class LoginRegisterPage extends Component {
     password:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/ 
   }
 
+  componentDidMount() {
+    const { isAuth, history } = this.props
+    if(isAuth){
+      history.push('/')
+    }
+  }
+
   selectField = () =>{
     const {match} = this.props
     if(match.path === '/login'){
@@ -106,12 +113,13 @@ class LoginRegisterPage extends Component {
         if (match.path === '/login') {
           const {data} = await axios.post(baseUrl + '/login', { ...input })
           // localStorage.setItem('token', response.data.data.token)
-          this.props.LOGIN(data.data.token)
+          this.props.LOGIN({token:data.data.token})
         } else {
           const {data} = await axios.post(baseUrl + '/register', { ...input })
-          this.props.LOGIN(data.data.token)
+          this.props.LOGIN({token:data.data.token})
         }
         this.setState({ isLoading: false })
+        this.props.history.push('/')
       } else {
         this.setState({ isValidate: newIsValidate, error: 'masukan semua field', isLoading: false })
       }
