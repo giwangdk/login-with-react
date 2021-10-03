@@ -10,6 +10,7 @@ import {
   Loader
 } from 'semantic-ui-react';
 
+import authRedirect from './../hocs/authRedirect'
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { LOGIN } from './../reducers/auth';
@@ -178,6 +179,8 @@ const mapStateToProps = state =>({
 
 const mapActionToProps = dispatch => bindActionCreators({
   LOGIN
-})
+}, dispatch)
 
-export default connect(mapStateToProps, null)(LoginRegisterPage);
+const LoginPageWithAuthRedirect = authRedirect('/', LoginRegisterPage)
+
+export default connect(null, mapActionToProps)(LoginPageWithAuthRedirect);

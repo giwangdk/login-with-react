@@ -1,7 +1,7 @@
 import React from 'react';
 import {Grid, Header} from 'semantic-ui-react';
 
-const MainPage = () => (
+const HomePage = () => (
   <Grid
     style={{
       width: '100%', margin: '0px', padding: '0px 20%', height: '100vh',
@@ -17,4 +17,4 @@ const MainPage = () => (
   </Grid>
 );
 
-export default MainPage;
+export default HomePage;

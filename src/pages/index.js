@@ -7,7 +7,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import LoginRegister from './loginRegister';
-import Main from './main';
+import Main from './main/index';
 
 const Pages = () => (
   <div id="indexPage">
