@@ -7,8 +7,13 @@ import {
   Header,
   Message,
   Segment,
+  Loader
 } from 'semantic-ui-react';
 
+import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { LOGIN } from './../reducers/auth';
+import axios from 'axios'
 // eslint-disable-next-line react/prefer-stateless-function
 class LoginRegisterPage extends Component {
 
@@ -17,6 +22,7 @@ class LoginRegisterPage extends Component {
     isValidate: {
       
     },
+    isLoading: false,
     error:null
   }
 
@@ -80,24 +86,38 @@ class LoginRegisterPage extends Component {
     })
   }
 
-  _onSubmit = () => {
-    const {input, isValidate} = this.state
-    const newInput = { ...input }
-    const newIsValidate = {...isValidate}
-    const isValidateAll = this.selectField().reduce((acc, dat) => {
-      newIsValidate[dat.name] = !isValidate[dat.name]
-      return acc && !!isValidate[dat.name]
-    }, true)
-
-    if (isValidateAll) {
-      
-    } else {
-      this.setState({isValidate: newIsValidate, error:'masukkan data semua field'})
+  _onFormSubmit = async (e) => {
+    try {
+      const { match } = this.props
+      const { input, isValidate } = this.state
+      const newIsValidate = { ...isValidate }
+      const isValidateAll = this.selectField().reduce((acc, dat) => {
+        newIsValidate[dat.name] = !!isValidate[dat.name]
+        return acc && !!isValidate[dat.name]
+      }, true)
+      if (isValidateAll) {
+        this.setState({ isLoading: true })
+        if (match.path === '/login') {
+          const response = await axios.post('https://pomonatodo.herokuapp.com/auth/login', { ...input })
+          // localStorage.setItem('token', response.data.data.token)
+          this.props.LOGIN(response.data.data.token)
+        } else {
+          const response = await axios.post('https://pomonatodo.herokuapp.com/auth/register', { ...input })
+          // localStorage.setItem('token', response.data.data.token)
+          this.props.LOGIN(response.data.data.token)
+        }
+        this.setState({ isLoading: false })
+      } else {
+        this.setState({ isValidate: newIsValidate, error: 'masukan semua field', isLoading: false })
+      }
+    } catch (error) {
+      this.setState({ error: error.message, isLoading: false })
     }
+
   }
 
   render() {
-    const { input, isValidate , error} = this.state
+    const { input, isValidate , error, isLoading} = this.state
     const { match } = this.props
     
     return (
@@ -106,7 +126,7 @@ class LoginRegisterPage extends Component {
           <Header as="h2" color="teal" textAlign="center">
             Log-in to your account
           </Header>
-          <Form size="large" onSubmit={this._onSubmit} error={error}>
+          <Form size="large" onSubmit={this._onFormSubmit} error={error}>
             <Segment stacked>
               {this.selectField().map((field) => {
                 return (
@@ -120,9 +140,11 @@ class LoginRegisterPage extends Component {
                 )
               })}
               <Message error header='error' content={error}/>
-              <Button color="teal" fluid size="large">
-                Login
-              </Button>
+              {isLoading ? <Loader active inline /> : (
+                <Button color='teal' type='submit' fluid size='large'>
+                  {match.path === '/login' ? 'Login' : 'Sign up'}
+                </Button>
+              )}
             </Segment>
           </Form>
          
@@ -137,4 +159,12 @@ class LoginRegisterPage extends Component {
   }
 }
 
-export default LoginRegisterPage;
+const mapStateToProps = state =>({
+  isAuth : state.isAuth
+})
+
+const mapActionToProps = dispatch => bindActionCreators({
+  LOGIN
+})
+
+export default connect(mapStateToProps, null)(LoginRegisterPage);

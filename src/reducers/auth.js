@@ -1,14 +1,30 @@
 const type = {
-
+  LOGIN: 'auth/Login',
+  LOGOUT : 'auth/Logout'
 };
 
 const initialState = {
-
+  token: localStorage.getItem('token'),
+  isAuth: localStorage.getItem('token') !== null
 };
 
 export default (state = initialState, action) => {
   const newState = {...state};
   switch (action.type) {
+    case type.LOGIN:
+      if(action.payload === null){
+        return state
+      }
+      localStorage.setItem('token', action.payload.token)
+      return {
+        token:action.payload.token,
+        isAuth: true,
+      }
+    case type.LOGOUT:
+      localStorage.removeItem('token')
+      return{
+        isAuth:false,
+      }
     default:
       return newState;
   }
